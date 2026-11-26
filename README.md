@@ -12,6 +12,7 @@ Download the latest source from the public [CoachKtool GitHub repository](https:
 - Enemy ADC and support from role assignments when League exposes them.
 - A best-effort enemy bot-lane estimate when roles are hidden. The estimate changes as picks arrive; for example, a likely support such as Soraka can replace Lux as the support guess.
 - Blind pick while the enemy support is not visible; it clears when the support appears.
+- Draft picks and blind-pick status are cleared when the match ends or League returns to the lobby/queue.
 
 CoachKtool follows current Champion Select picks and hovers. It does not lock champions, ban, or otherwise control the game client.
 
@@ -44,8 +45,8 @@ The script creates `dist/CoachKtool-Firefox-<version>.zip`, using the version in
 
 Choose the matching folder or upload archive:
 
-- Firefox: `extension/` or `CoachKtool-Firefox-1.0.2.zip`.
-- Chrome: `extension-chrome/` or `CoachKtool-Chrome-1.0.2.zip`.
+- Firefox: `extension/` or the archive produced by the build instructions above.
+- Chrome: `extension-chrome/`.
 
 For local development, Firefox 140 or newer: load the Firefox manifest from `about:debugging#/runtime/this-firefox` using **Load Temporary Add-on**. In Chrome, open `chrome://extensions`, enable Developer mode, and use **Load unpacked** with `extension-chrome/`.
 

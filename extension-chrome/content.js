@@ -11,6 +11,7 @@
   let busy = false;
   let connected = false;
   let pollTimer = null;
+  let draftCleared = false;
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function showStatus(text, state = "idle") {
@@ -117,6 +118,18 @@
     const checkbox = label?.querySelector('input[type="checkbox"]') || document.querySelector('input[type="checkbox"]');
     if (checkbox && checkbox.checked !== Boolean(value)) checkbox.click();
   }
+  async function clearDraft() {
+    for (const field of Object.keys(FIELD_IDS)) {
+      const input = inputFor(field);
+      if (!input) continue;
+      if (lastApplied.get(field) || input.value) dispatchInput(input, "");
+      // Backspace also removes the committed choice in the site's combobox.
+      dispatchKey(input, "Backspace", "Backspace");
+      lastApplied.set(field, "");
+    }
+    setBlindPick(false);
+    lastApplied.delete("draft");
+  }
   async function sync(fromClick) {
     if (busy || (!connected && !fromClick)) return;
     busy = true;
@@ -131,9 +144,14 @@
         return;
       }
       if (!result.draft) {
+        if (result.clearDraft && !draftCleared) {
+          await clearDraft();
+          draftCleared = true;
+        }
         showStatus(result.message || "Connected; waiting for Champion Select.", "connected");
         return;
       }
+      draftCleared = false;
       const draft = result.draft;
       const key = JSON.stringify(draft);
       const estimated = draft.enemyBotLaneEstimated ? " · enemy bot lane estimated" : "";

@@ -65,6 +65,10 @@ const roleAliases = new Map([
   ["top", "top"], ["jungle", "jungle"], ["middle", "middle"], ["mid", "middle"],
   ["bottom", "bottom"], ["bot", "bottom"], ["utility", "utility"], ["support", "utility"],
 ]);
+const draftResetPhases = new Set([
+  "PreEndOfGame", "EndOfGame", "WaitingForStats",
+  "None", "Lobby", "Matchmaking", "ReadyCheck",
+]);
 const mainSupports = new Set([
   "alistar", "bard", "blitzcrank", "braum", "janna", "karma", "leona", "lulu", "milio", "nami",
   "nautilus", "rell", "renata glasc", "rakan", "soraka", "sona", "tahm kench", "taric", "thresh", "yuumi",
@@ -168,7 +172,14 @@ async function currentDraft() {
   const { port, password } = parseLockfile(readFileSync(file, "utf8"));
   const phase = await localJson(port, password, "/lol-gameflow/v1/gameflow-phase");
   if (!["ChampSelect", "GameStart"].includes(phase)) {
-    return { ok: true, phase, draft: null, message: phase === "None" ? "Waiting for Champion Select." : `League phase: ${phase}` };
+    const clearDraft = draftResetPhases.has(phase);
+    const matchFinished = ["PreEndOfGame", "EndOfGame", "WaitingForStats"].includes(phase);
+    const message = matchFinished
+      ? "Match finished. Draft fields cleared."
+      : clearDraft && ["None", "Lobby", "Matchmaking", "ReadyCheck"].includes(phase)
+        ? "Waiting for Champion Select. Draft fields cleared."
+        : `League phase: ${phase}`;
+    return { ok: true, phase, draft: null, clearDraft, message };
   }
   const session = await localJson(port, password, "/lol-champ-select/v1/session");
   const catalog = await championCatalog();
