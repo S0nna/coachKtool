@@ -35,6 +35,8 @@ mc2cuber@gmail.com or @.sonna. on Discord.
 3. Open `https://coachkarakal.com/drafting` and click the CoachKtool badge to connect the add-on to the helper at `127.0.0.1:32145`.
 4. Enter or begin Champion Select; the page fields update as picks become available. The helper reads the League Client's local API and sends the draft snapshot only to the browser add-on on the same computer.
 
+The source repository README documents the Firefox archive build command, operating systems, Node.js version, and installation source. The add-on is plain JavaScript; the build script packages the source files without modifying them.
+
 The helper listens only on `127.0.0.1`. A reviewer without League Client cannot validate live synchronization. The helper is distributed separately from the Firefox add-on in the public GitHub repository above.
 
 ## Still needed from the publisher

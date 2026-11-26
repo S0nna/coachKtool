@@ -23,6 +23,23 @@ CoachKtool follows current Champion Select picks and hovers. It does not lock ch
 
 The health page is `http://127.0.0.1:32145/health`. If League is installed in a nonstandard location, set `LEAGUE_CLIENT_LOCKFILE` to the full path of its `lockfile` before starting the service.
 
+## Build the Firefox add-on archive
+
+The Firefox add-on is plain JavaScript and needs no compilation or third-party packages. The build script copies every file under `extension/` into a ZIP with `manifest.json` at the archive root; the files inside are byte-for-byte copies of the add-on source.
+
+Build requirements:
+
+- Windows 10/11, macOS, or Linux.
+- Node.js 20 or newer. Install Node.js from [nodejs.org](https://nodejs.org/en/download/); use the Windows `.msi` installer, macOS `.pkg` installer, or the official Linux package/binary for your distribution. npm and other dependencies are not required for this build.
+
+From the repository root, run:
+
+```text
+node scripts/build-firefox.mjs
+```
+
+The script creates `dist/CoachKtool-Firefox-<version>.zip`, using the version in `extension/manifest.json`. Upload that ZIP to Firefox Add-ons. To load the unarchived source locally, use Firefox 140 or newer and choose the manifest from `extension/` at `about:debugging#/runtime/this-firefox` using **Load Temporary Add-on**.
+
 ## Install the browser extension
 
 Choose the matching folder or upload archive:
@@ -34,7 +51,7 @@ For local development, Firefox 140 or newer: load the Firefox manifest from `abo
 
 Open or refresh `https://coachkarakal.com/drafting`. Click the CoachKtool badge once to connect to the local service. Chrome may ask to allow access to your local network; approve that browser prompt. After connection, picks sync in the background while the page is open. Click the badge again to retry if the local service was not running when you connected.
 
-Firefox temporary add-ons must be loaded again after closing Firefox. Store-upload archives are built separately for each browser and contain `manifest.json` at their root.
+Firefox temporary add-ons must be loaded again after closing Firefox. The Firefox upload archive is built by the script above and contains `manifest.json` at its root. Chrome's local-use folder is `extension-chrome/`; no Chrome Web Store submission is planned.
 
 ## Troubleshooting
 
