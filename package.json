@@ -1,0 +1,10 @@
+{
+  "name": "coachktool",
+  "version": "1.0.0",
+  "private": true,
+  "license": "Unlicense",
+  "description": "Local League Client draft bridge for Coach K drafting page",
+  "type": "module",
+  "scripts": { "start": "node server.mjs" },
+  "engines": { "node": ">=20" }
+}

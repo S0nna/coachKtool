@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Privacy information for CoachKtool Draft Sync, a local League of Legends draft companion for Coach K's drafting page.">
+  <title>CoachKtool Draft Sync — Privacy Policy</title>
+  <style>
+    :root { color-scheme: light dark; font: 16px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; background: #10151c; color: #e9edf3; }
+    main { box-sizing: border-box; width: min(100% - 32px, 780px); margin: 56px auto; padding: 36px; background: #19212b; border: 1px solid #344252; border-radius: 16px; }
+    h1, h2 { line-height: 1.2; color: #fff; }
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 5vw, 2.7rem); }
+    h2 { margin-top: 32px; font-size: 1.25rem; }
+    p, li { color: #d2dbe5; }
+    a { color: #8cc7ff; }
+    .updated { color: #9cabb9; margin-top: 0; }
+    @media (max-width: 540px) { main { margin: 16px auto; padding: 24px 20px; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>CoachKtool Draft Sync</h1>
+  <p class="updated">Privacy Policy · Last updated November 25, 2026</p>
+  <p>CoachKtool is a browser add-on and companion service that reads League of Legends Champion Select on your computer and fills draft fields on <a href="https://coachkarakal.com/drafting">Coach K's drafting page</a>.</p>
+
+  <h2>Information processed</h2>
+  <p>The companion service reads gameflow and Champion Select information from the League Client API running on the same computer. It uses the League Client lockfile password to authenticate to that local API. The password stays in the local companion service and is not sent to the extension, Coach K, or a CoachKtool-operated server.</p>
+  <p>The service sends the current draft snapshot to the browser add-on over the local loopback address <code>127.0.0.1</code>. The add-on uses it to populate the ally and enemy champion fields and blind-pick indicator on Coach K's drafting page. The service does not intentionally save draft history. The add-on does not keep a draft history or send draft data to a CoachKtool-operated remote server.</p>
+
+  <h2>Third-party services</h2>
+  <p>When needed, the companion service retrieves the public champion catalog from Riot Games' Data Dragon, including champion names and role tags, and caches it in memory for up to twelve hours. The request does not include draft picks, League account information, or the lockfile password.</p>
+  <p>When draft fields are filled, those values are present in your browser on Coach K's website. Coach K's website and browser provider may process information under their own privacy policies. CoachKtool does not control their practices.</p>
+
+  <h2>Permissions and local connection</h2>
+  <p>The browser add-on runs on the Coach K drafting page and requests a local draft snapshot after you click its CoachKtool badge. Chrome may show a prompt to allow this local network connection. The companion service listens only on <code>127.0.0.1</code> and is not designed to accept connections from the public internet.</p>
+  <p>CoachKtool is read-only toward League Client. It does not lock champions, ban, or issue game commands. No CoachKtool account, analytics, advertising, or remote draft-storage service is used.</p>
+
+  <h2>Data retention and choices</h2>
+  <p>The current draft snapshot is held in memory while the local service and browser page are active; champion catalog data may remain in service memory for up to twelve hours. Stop the companion service or close the drafting page to stop synchronization. You can remove or disable the browser add-on at any time.</p>
+
+  <h2>Contact</h2>
+  <p>For privacy questions or support, contact <a href="mailto:mc2cuber@gmail.com">mc2cuber@gmail.com</a> or message <strong>@.sonna.</strong> on Discord.</p>
+</main>
+</body>
+</html>
+
+

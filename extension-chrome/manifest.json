@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "CoachKtool Draft Sync",
+  "version": "1.0.2",
+  "description": "Sync League Champion Select picks to Coach K's drafting page.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [],
+  "content_scripts": [
+    {
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "matches": [
+        "https://coachkarakal.com/drafting*",
+        "https://www.coachkarakal.com/drafting*"
+      ]
+    }
+  ]
+}
