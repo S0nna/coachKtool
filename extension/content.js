@@ -118,17 +118,53 @@
     const checkbox = label?.querySelector('input[type="checkbox"]') || document.querySelector('input[type="checkbox"]');
     if (checkbox && checkbox.checked !== Boolean(value)) checkbox.click();
   }
-  async function clearDraft() {
-    for (const field of Object.keys(FIELD_IDS)) {
-      const input = inputFor(field);
-      if (!input) continue;
-      if (lastApplied.get(field) || input.value) dispatchInput(input, "");
-      // Backspace also removes the committed choice in the site's combobox.
-      dispatchKey(input, "Backspace", "Backspace");
-      lastApplied.set(field, "");
+  function findDraftResetButton() {
+    const xpath = "/html/body/app-root/main/app-drafting/section[2]/div[3]/button[2]";
+    const candidate = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    if (candidate?.tagName === "BUTTON" && candidate.getClientRects().length && !candidate.disabled) return candidate;
+    return [...document.querySelectorAll("app-drafting button")].find((button) =>
+      button.getClientRects().length && !button.disabled && /^(clear|clear draft|reset|reset draft)$/i.test(button.textContent.trim()),
+    ) || null;
+  }
+  async function clearFieldWithOption(field) {
+    const input = inputFor(field);
+    if (!input) return false;
+    input.click();
+    const slot = slotFor(field);
+    let clearOption = null;
+    for (let attempt = 0; attempt < 12 && !clearOption; attempt++) {
+      const candidates = new Set([
+        ...document.querySelectorAll(`[id^="champ-select-list-${slot}-"]`),
+        ...document.querySelectorAll('[role="option"], [role="menuitem"], app-drafting button'),
+      ]);
+      clearOption = [...candidates].find((item) =>
+        item.getClientRects().length && normalizeName(item.textContent) === "clear",
+      ) || null;
+      if (!clearOption) await wait(100);
     }
+    if (!clearOption) return false;
+    dispatchMouseSelection(clearOption);
+    if (!await waitForCommit(field, input)) return false;
+    lastApplied.set(field, "");
+    return true;
+  }
+  async function clearDraft() {
+    const resetButton = findDraftResetButton();
+    if (resetButton) {
+      resetButton.click();
+      await wait(100);
+      lastApplied.clear();
+      setBlindPick(false);
+      return true;
+    }
+    let allCleared = true;
+    for (const field of Object.keys(FIELD_IDS)) {
+      allCleared = await clearFieldWithOption(field) && allCleared;
+    }
+    if (!allCleared) return false;
     setBlindPick(false);
     lastApplied.delete("draft");
+    return true;
   }
   async function sync(fromClick) {
     if (busy || (!connected && !fromClick)) return;
@@ -145,8 +181,11 @@
       }
       if (!result.draft) {
         if (result.clearDraft && !draftCleared) {
-          await clearDraft();
-          draftCleared = true;
+          draftCleared = await clearDraft();
+          if (!draftCleared) {
+            showStatus("Could not find the page reset control; retrying.", "error");
+            return;
+          }
         }
         showStatus(result.message || "Connected; waiting for Champion Select.", "connected");
         return;
